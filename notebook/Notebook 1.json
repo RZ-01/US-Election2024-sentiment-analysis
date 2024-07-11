@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9f368991-f49e-4f51-810f-fc6c8a7e10ad"
+				"spark.autotune.trackingId": "a8ded9c3-8247-433f-ada3-f2050ab04043"
 			}
 		},
 		"metadata": {
@@ -70,11 +70,11 @@
 					"    blob_sas_token)\n",
 					"df = spark.read.load('wasbs://redditopinion@zjr000.blob.core.windows.net/FabrikamComments.csv', format='csv'\n",
 					"## If header exists uncomment line below\n",
-					"##, header=True\n",
+					", header=True\n",
 					")\n",
 					"df.write.mode(\"overwrite\").saveAsTable(\"default.YourTableName\")"
 				],
-				"execution_count": 1
+				"execution_count": 2
 			}
 		]
 	}
