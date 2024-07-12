@@ -1,0 +1,27 @@
+{
+	"name": "CognitiveServicelast",
+	"properties": {
+		"annotations": [],
+		"type": "CognitiveService",
+		"typeProperties": {
+			"subscriptionId": "b211b5f1-b80d-480c-bdf0-acf5f4a2050c",
+			"resourceGroup": "bigdata_huadi",
+			"csName": "testanalysi",
+			"csKind": "TextAnalytics",
+			"csLocation": "eastasia",
+			"endPoint": "https://testanalysi.cognitiveservices.azure.com/",
+			"csKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVaultlast",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "analytics"
+			}
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
