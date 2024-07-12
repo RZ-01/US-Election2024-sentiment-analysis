@@ -1,0 +1,10 @@
+{
+	"name": "AzureKeyVaultlast",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://lastversion.vault.azure.net/"
+		}
+	}
+}
