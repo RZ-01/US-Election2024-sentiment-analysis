@@ -8,8 +8,23 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"AzureBlobStorage2_connectionString": {
+			"value": ""
+		},
 		"us2024-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:us2024.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://keykun.vault.azure.net/"
+		},
+		"AzureKeyVaultlast_properties_typeProperties_baseUrl": {
+			"value": "https://lastversion.vault.azure.net/"
+		},
+		"CognitiveService1_properties_typeProperties_subscriptionId": {
+			"value": "b211b5f1-b80d-480c-bdf0-acf5f4a2050c"
+		},
+		"CognitiveServicelast_properties_typeProperties_subscriptionId": {
+			"value": "b211b5f1-b80d-480c-bdf0-acf5f4a2050c"
 		},
 		"us2024-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://zjrgen2.dfs.core.windows.net"
