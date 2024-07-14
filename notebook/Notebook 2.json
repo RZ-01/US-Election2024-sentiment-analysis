@@ -1,5 +1,5 @@
 {
-	"name": "Notebook 1",
+	"name": "Notebook 2",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f81a0d05-384f-48be-8348-3dbbeb8c02dc"
+				"spark.autotune.trackingId": "c0bf7ba4-50a5-4446-b766-3fb1bfaa26ce"
 			}
 		},
 		"metadata": {
@@ -51,28 +51,30 @@
 			{
 				"cell_type": "code",
 				"metadata": {
-					"microsoft": {
-						"language": "python"
-					}
+					"collapsed": false
 				},
 				"source": [
-					"%%pyspark\n",
-					"blob_account_name = \"zjr000\"\n",
-					"blob_container_name = \"copyactivity-logs\"\n",
-					"from pyspark.sql import SparkSession\n",
+					"# If you use spark2.4 pool, please replace with `from mmlspark.cognitive import *` instead\n",
+					"# Kindly note that spark2.4 pool will be deprecated soon, spark3.x pools are recommended\n",
+					"from synapse.ml.cognitive import *\n",
+					"from pyspark.sql.functions import col\n",
 					"\n",
-					"sc = SparkSession.builder.getOrCreate()\n",
-					"token_library = sc._jvm.com.microsoft.azure.synapse.tokenlibrary.TokenLibrary\n",
-					"blob_sas_token = token_library.getConnectionString(\"AzureBlobStorage1\")\n",
+					"# Load the data into a Spark DataFrame\n",
+					"df = spark.sql(\"SELECT * FROM default.yourtablename\")\n",
 					"\n",
-					"spark.conf.set(\n",
-					"    'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\n",
-					"    blob_sas_token)\n",
-					"df = spark.read.load('wasbs://copyactivity-logs@zjr000.blob.core.windows.net/reddit_comments_processed_v0.csv', format='csv'\n",
-					"## If header exists uncomment line below\n",
-					", header=True\n",
-					")\n",
-					"df.write.mode(\"overwrite\").saveAsTable(\"default.YourTableName\")"
+					"sentiment = (TextSentiment()\n",
+					"    .setLinkedService(\"CognitiveServicelast\")\n",
+					"    .setOutputCol(\"output\")\n",
+					"    .setErrorCol(\"error\")\n",
+					"    .setLanguage(\"en\")\n",
+					"    .setTextCol(\"cleaned_body\"))\n",
+					"\n",
+					"results = sentiment.transform(df)\n",
+					"\n",
+					"# Show the results\n",
+					"display(results\n",
+					"    .withColumn(\"sentiment\", col(\"output.document.sentiment\"))\n",
+					"    .select(\"cleaned_body\", \"sentiment\", \"error\"))"
 				],
 				"execution_count": 1
 			}
