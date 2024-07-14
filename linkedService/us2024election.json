@@ -1,0 +1,11 @@
+{
+	"name": "us2024election",
+	"properties": {
+		"annotations": [],
+		"type": "PowerBIWorkspace",
+		"typeProperties": {
+			"workspaceID": "huadi_bigdata",
+			"tenantID": "72130a56-05d8-4348-b060-b02c1771453a"
+		}
+	}
+}
