@@ -46,7 +46,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/us2024')]",
+			"name": "[concat(parameters('workspaceName'), '/test')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -228,6 +228,20 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/us2024election')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "PowerBIWorkspace",
+				"typeProperties": {
+					"workspaceID": "huadi_bigdata",
+					"tenantID": "72130a56-05d8-4348-b060-b02c1771453a"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
 			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
 			"apiVersion": "2019-06-01-preview",
@@ -264,7 +278,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "us2024",
+					"referenceName": "test",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -277,7 +291,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "abb7736a-ed73-4774-b1ac-c91a97067877"
+						"spark.autotune.trackingId": "d1156bf9-38e2-4077-890c-715e2268b224"
 					}
 				},
 				"metadata": {
@@ -291,10 +305,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/b211b5f1-b80d-480c-bdf0-acf5f4a2050c/resourceGroups/BigData_Huadi/providers/Microsoft.Synapse/workspaces/us2024/bigDataPools/us2024",
-						"name": "us2024",
+						"id": "/subscriptions/b211b5f1-b80d-480c-bdf0-acf5f4a2050c/resourceGroups/BigData_Huadi/providers/Microsoft.Synapse/workspaces/us2024/bigDataPools/test",
+						"name": "test",
 						"type": "Spark",
-						"endpoint": "https://us2024.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/us2024",
+						"endpoint": "https://us2024.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/test",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -302,7 +316,8 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -315,12 +330,23 @@
 							}
 						},
 						"source": [
-							"%%pyspark\r\n",
-							"df = spark.read.load('abfss://uselection@zjrgen2.dfs.core.windows.net/uselection2024/reddit_comments_processed_v2.csv', format='csv'\r\n",
-							"## If header exists uncomment line below\r\n",
-							", header=True\r\n",
-							")\r\n",
-							"df.write.mode(\"overwrite\").saveAsTable(\"default.us2024\")"
+							"%%pyspark\n",
+							"blob_account_name = \"zjr000\"\n",
+							"blob_container_name = \"copyactivity-logs\"\n",
+							"from pyspark.sql import SparkSession\n",
+							"\n",
+							"sc = SparkSession.builder.getOrCreate()\n",
+							"token_library = sc._jvm.com.microsoft.azure.synapse.tokenlibrary.TokenLibrary\n",
+							"blob_sas_token = token_library.getConnectionString(\"AzureBlobStorage1\")\n",
+							"\n",
+							"spark.conf.set(\n",
+							"    'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\n",
+							"    blob_sas_token)\n",
+							"df = spark.read.load('wasbs://copyactivity-logs@zjr000.blob.core.windows.net/copyactivity-logs/Copy_a58/FabrikamComments.csv', format='csv'\n",
+							"## If header exists uncomment line below\n",
+							", header=True\n",
+							")\n",
+							"df.write.mode(\"overwrite\").saveAsTable(\"default.YourTableName\")"
 						],
 						"outputs": [],
 						"execution_count": 1
@@ -330,7 +356,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/us2024')]",
+			"name": "[concat(parameters('workspaceName'), '/test')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
